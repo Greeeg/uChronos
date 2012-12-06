@@ -2,7 +2,7 @@
 #define _ADC_H_
 
 
-int adcConv(int,int,int);
+void adcConv(int,int,int);
 int adcBatt(void);
 
 #endif // _ADC_H_

@@ -2,10 +2,13 @@
 #define _LCD_H_
 
 
+#ifndef __ASSEMBLER__
 extern char lcdChar;
 
 void lcdPut(char);
 void lcdSym(int,char);
+#endif
+
 
 #define SEG_ON      0x1
 #define SEG_OFF     0x2

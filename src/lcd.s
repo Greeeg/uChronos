@@ -45,7 +45,12 @@
 #define SEG_F                	(BIT0)
 #define SEG_G                	(BIT1)
 
+.section .bss
+.global lcdChar
+lcdChar:	.word 0
 
+.section .data
+; 7-segment font table
 lcdTable:
     .byte 0xf5, 0x60, 0xb6, 0xf2, 0x63, 0xd3, 0xd7, 0x70, 0xf7, 0xf3 
     .byte 0xe4, 0x71, 0x13, 0x82, 0x00, 0x36, 0x00, 0x77, 0xc7, 0x86     
@@ -57,31 +62,40 @@ lcdPos:
     .byte	1,2,3,5,11,10,9,8,7
 
 
+.section .text
 .global lcdClr
 lcdClr: bis.b	#LCDCLRBM+LCDCLRM,&LCDBMEMCTL	// Clear entire display memory
         ret
+
 
 
 //----------------------------
 // Basic Swap nibble function |
 // Input byte r15
 //----------------------------
-swpn:   push.w	r12     //temp storage
-        mov.w	r15,r12
+swpn:  
+        mov.w	r15,r4
         rla     r15
         rla     r15
         rla     r15
         rla     r15
-        rra     r12
-        rra     r12
-        rra     r12
-        rra     r12
+        rra     r4
+        rra     r4
+        rra     r4
+        rra     r4
         bic.b	#0x0F,r15
-        bis.b	r12,r15
-        pop.w	r12
+        bis.b	r4,r15
         ret
-
-
+/*
+swpn:   mov.w   r15,r4
+        mov.w   r4,&MPY
+        mov.w   #16,&OP2
+        mov.w   &RES1,r15
+        mov.w   r4,MPY
+        mov.w   #4096,&OP2
+        bis.w   &RES1,r15
+        ret
+*/
 
 //------------------------------\
 // Put ascii character on LCD   |

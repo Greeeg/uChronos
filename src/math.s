@@ -31,7 +31,7 @@
 
 //  math.s (math fuctions)
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
+/*
 // Integer-Integer division using Algorithm described in Hamacher
 .text
 .global div
@@ -49,11 +49,5 @@ loc1:   dec.w   R11
         jnz     start
         ret
         
-.text
-.global mul     
-mul:    mov.w   r15,r4
-test:   dec.w   r14
-        jz      end
-        add.w   r4,r15
-        jmp     test
-end:    ret
+
+*/

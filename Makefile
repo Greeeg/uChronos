@@ -10,14 +10,16 @@ TARGET = $(BUILD_DIR)/$(PROJECT).elf
 CC = msp430-gcc
 
 MSPDEBUG = mspdebug
-PROGFLAGS = rf2500 'opt fet_block_size 2048' 
+PROGFLAGS = rf2500 'opt fet_block_size 512' 
 
 
 ## MCU to pass to the linker
 MCU = cc430f6137
 
 ## C flags
-CFLAGS := -Wall -Os -mmcu=$(MCU) -gdwarf-2
+#CFLAGS := -Wall -Os -mmcu=$(MCU) -nostartfiles #-gdwarf-2 
+
+CFLAGS := -Wall -Os -mmcu=$(MCU)
 
 ## Assembly flags
 ASMFLAGS := -x assembler-with-cpp

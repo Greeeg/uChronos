@@ -5,9 +5,13 @@ _The slim Firmware for the ez430 Chronos Development watch_
 + Small / Simple LCD API
 + Utilizing Internal RTC
 + Battery sensing
++ Day of the Wk
 
 ## Planned features: ##
-+ All the features implemented by open chronos
++ Time Setting
++ Menu statemachine
++ Altimeter/barometer
++ Sunrise/Sunset Table
 
 ## To build: ##
 ### Requirments: ###

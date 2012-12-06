@@ -37,49 +37,62 @@
 //-------------------------------------
 #include <cc430f6137.h>
 #include "lcd.h"
-#include "xprint.h"
+//#include "xprint.h"
 #include "global.h"
+#include "core.h"
 #include "adc.h"
+#include "../hardware.h"
 
 //  Global Variables
 //-------------------------------------
-char lcdChar;
-int temp;
-int volt = 300;
+int adcVal,adcVolt=300,adcDegree=150;
+
+volatile int wakeEvent;
+volatile char buttonMask;
+
+
 
 int main(void)
 {
 	init();
-	
-    
-	
-	lcdChar = 0;
-//	xprint("0430");
 
-    
-   // 
-    lcdSym(SYM_BATT,SEG_ON);
-    lcdSym(DP1,SEG_ON);
-    
-    lcdSym(COL3,BLINK | SEG_ON);
-    
+
 	while(1)
 	{
+		
 
-        adcBatt();
-        xprint("%2u%02u  %03u",RTCHOUR,RTCMIN,volt);
-        __bis_SR_register(LPM0_bits + GIE);
+		coreEvent();
+       // xprint("%2u%02u%05u",RTCHOUR,RTCMIN,adcDegree);
+        
+		LPM3;
 
 	}
 }
 
 
 
+__attribute__((interrupt(TIMER1_A0_VECTOR)))
+void Timer1_A0_Int(void)
+{
+	asm("jmp TA1Int");
+}
+
+
+
+__attribute__((interrupt(ADC12_VECTOR)))
+void adc12Int(void)
+{
+   adcVal = ADC12MEM0;
+  // LPM4_EXIT;
+}
+
+
 __attribute__((interrupt(RTC_VECTOR))) 
 void rtcInt(void)
 {
     RTCIV = 0;
-   LPM4_EXIT;
+	wakeEvent = EVENT_TICK;
+   	__bic_SR_register_on_exit(LPM3_bits);
 }
 
 __attribute__((interrupt(PORT2_VECTOR))) 
@@ -87,12 +100,14 @@ void keyInt(void)
 {
 
     __disable_interrupt();
-    P2IFG = 0x00; 	
-    P2IE  = 0x1F;	
-    __enable_interrupt();
+	buttonMask = P2IFG;   
 
+	
 
-    LPM4_EXIT;
+	P2IFG = 0x00; 	
+    P2IE  = 0x1F;
+    wakeEvent = EVENT_BUTTON;
+    LPM3_EXIT;
 }
 
 
